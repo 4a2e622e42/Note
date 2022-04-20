@@ -14,27 +14,39 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class AppViewModel extends AndroidViewModel
 {
-    Application application;
-    @Inject
-    AppRepository appRepository;
+
+    public LiveData<List<Note>> readAllNote;
+    public AppRepository appRepository;
 
     @Inject
     public AppViewModel(@NonNull Application application)
     {
         super(application);
-        this.application = application;
+        appRepository = new AppRepository(application);
+
+        readAllNote = appRepository.readAllNote;
 
     }
 
-    public void addNote(Note note)
+    public void addNotes(Note note)
     {
-        appRepository.addNote(note);
+        appRepository.addNotes(note);
     }
 
-    public LiveData<List<Note>> readAllNotes()
+    public void updateNote(Note note)
     {
-        return appRepository.readAllNote();
+        appRepository.updateNote(note);
     }
+
+
 }
+
+

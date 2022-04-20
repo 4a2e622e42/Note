@@ -1,9 +1,11 @@
 package com.ash.note.Hilt;
 
+import android.app.Application;
+
 import dagger.hilt.android.HiltAndroidApp;
 
 @HiltAndroidApp
-public class HiltApplication
+public class HiltApplication extends Application
 {
 
 }

@@ -16,12 +16,6 @@ public class HiltRepository
 {
 
 
-    @Provides
-    @Singleton
-    AppRepository provideAppRepository(NoteDao noteDao)
-    {
-        return new AppRepository(noteDao);
-    }
 
 
 

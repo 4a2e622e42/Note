@@ -3,9 +3,43 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/background.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/black_circle.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/blue_circle.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/bottom_sheet_bg.xml" value="0.231" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/bottom_sheet_header.xml" value="0.187" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/circle_bg.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/divider.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/edit_txt_bg.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/edittext_bg.xml" value="0.231" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/green_circle.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_add.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_back.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.187" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_delete.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_image.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_link.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_more.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_search.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_tick.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/ic_undo.xml" value="0.187" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/note_color_1.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/note_color_4.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/note_color_5.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/orange_circle.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/purpule_circle.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/serach_bg.xml" value="0.231" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/white_circle.xml" value="0.1865" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/drawable/yellow_circle.xml" value="0.1865" />
         <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/activity_main.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/fragment_add.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/fragment_home.xml" value="0.16530797101449277" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/app_bar_layout.xml" value="0.25" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/fragment_add.xml" value="0.25" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/fragment_update_note.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Nima/AndroidStudioProjects/Note/app/src/main/res/layout/recycler_row_item.xml" value="0.2" />
       </map>
     </option>
   </component>
