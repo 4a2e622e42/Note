@@ -74,7 +74,17 @@ dependencies {
 
 
 
-    implementation 'com.maxkeppeler.sheets:core:2.2.7'
+
+
+    implementation 'com.airbnb.android:lottie:5.0.3'
+
+    implementation 'pub.devrel:easypermissions:3.0.0'
+
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+
+
+
 
 
 

@@ -7,68 +7,84 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/con"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
 
-        <com.google.android.material.card.MaterialCardView
+
+
+ <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#171c26"
+        android:layout_margin="8dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#171c26"
-            app:cardCornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageNote"
+                android:layout_width="match_parent"
+                android:layout_height="194dp"
+                android:visibility="visible"
+                android:scaleType="centerCrop"
+                />
 
             <LinearLayout
-                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#171c26"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="20dp"
                     android:text="Title"
                     android:textColor="@color/white"
-                    android:textSize="22sp" />
-
+                    android:textSize="22sp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    />
                 <TextView
                     android:id="@+id/content"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:padding="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Note"
                     android:textColor="#818a9c"
                     android:textSize="15sp"
-
+                    android:fontFamily="@font/manrope_regular"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     />
-
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:stateListAnimator="@anim/date_txt_anim"
                     android:text="12/5/2022 15:35"
                     android:textColor="#818a9c"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:layout_marginTop="16dp"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    />
 
             </LinearLayout>
 
 
-        </com.google.android.material.card.MaterialCardView>
 
+        </LinearLayout>
 
+    </com.google.android.material.card.MaterialCardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 </layout>

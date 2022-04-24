@@ -15,6 +15,7 @@ public class AppRepository
     public NoteDao noteDao;
     public LiveData<List<Note>> readAllNote;
 
+
     public AppRepository(Application application)
     {
         NoteDataBase noteDataBase = NoteDataBase.getInstance(application);
@@ -32,6 +33,17 @@ public class AppRepository
     {
         noteDao.updateNote(note);
     }
+
+
+    public void deleteNote(Note note)
+    {
+        noteDao.deleteNote(note);
+    }
+
+
+
+
+
 
 
 

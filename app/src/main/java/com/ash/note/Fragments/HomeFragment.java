@@ -1,42 +1,37 @@
 package com.ash.note.Fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.GridLayoutManager;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 
 import com.ash.note.AppViewModel;
 import com.ash.note.Data.Note;
 import com.ash.note.NoteAdapter;
+import com.ash.note.PinedAdapter;
 import com.ash.note.R;
 import com.ash.note.databinding.FragmentHomeBinding;
-import com.ash.note.databinding.RecyclerRowItemBinding;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class HomeFragment extends Fragment
@@ -44,14 +39,13 @@ public class HomeFragment extends Fragment
     FragmentHomeBinding binding;
     AppViewModel appViewModel;
     NoteAdapter noteAdapter;
-
-    List<Note> list;
-
+    PinedAdapter pinedAdapter;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
     {
+
        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false);
        appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
@@ -65,24 +59,57 @@ public class HomeFragment extends Fragment
            }
        });
 
-        binding.recycler.setLayoutManager(new GridLayoutManager(requireActivity(),2));
 
 
+
+
+        //Get All Note
         appViewModel.readAllNote.observe(getViewLifecycleOwner(), new Observer<List<Note>>()
         {
             @Override
             public void onChanged(List<Note> notes)
             {
-                list = notes;
-                if(binding.recycler.getAdapter() != null)
+                ArrayList<Note> noteArrayList = new ArrayList<>();
+                ArrayList<Note> pinnedNoteList = new ArrayList<>();
+
+
+                //UpComing note SetUp
+                for(Note items: notes)
                 {
-                    noteAdapter = (NoteAdapter) binding.recycler.getAdapter();
-                    noteAdapter.updateData(notes);
-                }else
-                {
-                    noteAdapter = new NoteAdapter(notes);
-                    binding.recycler.setAdapter(noteAdapter);
+                    if(!items.isPinned)
+                    {
+                        noteArrayList.add(items);
+                    }
                 }
+
+                binding.recycler.setLayoutManager(new GridLayoutManager(requireActivity(),2));
+                noteAdapter = new NoteAdapter(noteArrayList);
+                binding.recycler.smoothScrollToPosition(0);
+                binding.recycler.setAdapter(noteAdapter);
+
+                //Pinned Note SetUp
+                for(Note items: notes)
+                {
+                    if(items.isPinned)
+                    {
+                        pinnedNoteList.add(items);
+                    }
+                }
+                if (pinnedNoteList.isEmpty())
+                {
+                    binding.pinnedCon.setVisibility(View.GONE);
+                } else {
+                    binding.pinnedCon.setVisibility(View.VISIBLE);
+
+                }
+
+
+                binding.pinedRecycler.setLayoutManager(new LinearLayoutManager(requireActivity(),LinearLayoutManager.HORIZONTAL,false));
+                pinedAdapter = new PinedAdapter(pinnedNoteList);
+                binding.pinedRecycler.setAdapter(pinedAdapter);
+
+
+
 
             }
         });
@@ -92,10 +119,41 @@ public class HomeFragment extends Fragment
 
 
 
+        //Search in recyclerView
+        binding.searchBox.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                noteAdapter.getFilter().filter(charSequence.toString());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                noteAdapter.getFilter().filter(editable.toString());
+            }
+        });
+
+
 
 
         return binding.getRoot();
     }
+
+
+
+
+
+
+
 
 
 

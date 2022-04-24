@@ -1,21 +1,35 @@
 package com.ash.note.Fragments;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.nfc.Tag;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ash.note.AppViewModel;
 import com.ash.note.Data.Note;
@@ -24,9 +38,11 @@ import com.ash.note.TextUndoRedo;
 import com.ash.note.databinding.FragmentUpdateNoteBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class UpdateNoteFragment extends Fragment
 {
@@ -34,12 +50,24 @@ public class UpdateNoteFragment extends Fragment
     AppViewModel appViewModel;
     String bgColor;
     BottomSheetDialog dialog;
+    public Note note;
+
+    Vibrator vibrator;
+
+    int uid;
+    int clickCount = 0;
+
+    boolean isPinned;
 
     int titleCharNumber;
     int subTitleCharNumber;
     int contentCharNumber;
     int totalCharNumber ;
-    int tot;
+
+    String selectedImagePath;
+
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
@@ -47,17 +75,23 @@ public class UpdateNoteFragment extends Fragment
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_update_note, container, false);
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
-        Note  note = getArguments().getParcelable("note");
+        note = getArguments().getParcelable("note");
+
+
+        selectedImagePath = note.getImagePath();
+
+        uid = note.getUid();
 
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, HH:mm");
         String time = simpleDateFormat.format(new Date());
 
 
+        //Init Vibrator
+        vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         totalCharNumber = note.getCharNumber();
 
-        Log.e("TAG","OnCreate:   "+totalCharNumber+"  "+titleCharNumber+"    "+subTitleCharNumber+"     "+contentCharNumber);
 
         binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" Character");
 
@@ -66,6 +100,7 @@ public class UpdateNoteFragment extends Fragment
         binding.upDatedTitle.setText(note.getTitle().toString());
         binding.upDatedSubtitle.setText(note.getSubTitle().toString());
         binding.upDatedContent.setText(note.getContent().toString());
+
 
         bgColor = note.getBgColor();
 
@@ -76,7 +111,7 @@ public class UpdateNoteFragment extends Fragment
 
 
         dialog = new BottomSheetDialog(requireActivity());
-        moreButton();
+        moreButton(note.isPinned);
 
         binding.more.setOnClickListener(new View.OnClickListener()
         {
@@ -87,8 +122,24 @@ public class UpdateNoteFragment extends Fragment
             }
         });
 
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
 
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+        //Get Image
+        Log.e("TAG","selctedPath:  "+selectedImagePath);
+        Log.e("TAG","GetFromNote:  "+note.getImagePath());
+
+
+        if(note.getImagePath() != null)
+        {
+            binding.noteImage.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
+            binding.noteImage.setVisibility(View.VISIBLE);
+        }else
+        {
+            binding.noteImage.setVisibility(View.GONE);
+        }
 
 
 
@@ -258,13 +309,15 @@ public class UpdateNoteFragment extends Fragment
     private void updateNote(Note note)
     {
 
-        Note updateNote       =  note;
-        updateNote.uid        =  note.getUid();
+        Note updateNote   =  note;
+        updateNote.uid    =  note.getUid();
         updateNote.setTitle(binding.upDatedTitle.getText().toString());
         updateNote.setSubTitle(binding.upDatedSubtitle.getText().toString());
         updateNote.setContent(binding.upDatedContent.getText().toString());
         updateNote.setCharNumber(totalCharNumber);
         updateNote.setBgColor(bgColor);
+        updateNote.setPinned(isPinned);
+        updateNote.setImagePath(selectedImagePath);
 
 
         appViewModel.updateNote(updateNote);
@@ -274,9 +327,10 @@ public class UpdateNoteFragment extends Fragment
 
     private void bgSetUp(String bgColor)
     {
-        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_dialog,null);
+        View view = LayoutInflater.from(requireActivity()).inflate(R.layout.bottom_sheet_dialog,binding.getRoot().findViewById(R.id.sheetContainer));
 
         ImageView blueCircle,yellowCircle,whiteCircle,purpleCircle,greenCircle,orangeCircle,blackCircle;
+
         blueCircle = view.findViewById(R.id.blueCircle);
         yellowCircle = view.findViewById(R.id.yellowCircle);
         whiteCircle = view.findViewById(R.id.whiteCircle);
@@ -284,6 +338,8 @@ public class UpdateNoteFragment extends Fragment
         greenCircle = view.findViewById(R.id.greenCircle);
         orangeCircle = view.findViewById(R.id.orangeCircle);
         blackCircle = view.findViewById(R.id.blackCircle);
+
+
 
 
         switch (bgColor)
@@ -524,11 +580,15 @@ public class UpdateNoteFragment extends Fragment
 
 
     }
-    private void moreButton()
+    private void moreButton(boolean pin)
     {
         View view = getLayoutInflater().inflate(R.layout.bottom_sheet_dialog,null);
 
-        ImageView blueCircle,yellowCircle,whiteCircle,purpleCircle,greenCircle,orangeCircle,blackCircle;
+        dialog.setContentView(view);
+
+        TextView deleteNote,pinText,addImage,makeCopy;
+
+        ImageView blueCircle,yellowCircle,whiteCircle,purpleCircle,greenCircle,orangeCircle,blackCircle,pinImage;
         blueCircle = view.findViewById(R.id.blueCircle);
         yellowCircle = view.findViewById(R.id.yellowCircle);
         whiteCircle = view.findViewById(R.id.whiteCircle);
@@ -536,6 +596,93 @@ public class UpdateNoteFragment extends Fragment
         greenCircle = view.findViewById(R.id.greenCircle);
         orangeCircle = view.findViewById(R.id.orangeCircle);
         blackCircle = view.findViewById(R.id.blackCircle);
+
+
+        deleteNote = view.findViewById(R.id.deleteText);
+        pinText = view.findViewById(R.id.pinText);
+        pinImage = view.findViewById(R.id.pinImage);
+        addImage = view.findViewById(R.id.addImageText);
+        makeCopy = view.findViewById(R.id.makeCopyText);
+
+
+
+
+
+
+        deleteNote.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                appViewModel.deleteNote(note);
+                dialog.dismiss();
+                requireActivity().onBackPressed();
+            }
+        });
+
+        if(pin)
+        {
+            isPinned = true;
+            clickCount = 1;
+            pinImage.setImageResource(R.drawable.ic_red_push_pin);
+            pinText.setText("Unpin");
+        }else
+        {
+            isPinned = false;
+            clickCount = 0;
+            pinImage.setImageResource(R.drawable.ic_baseline_push_pin_24);
+            pinText.setText("Pin");
+
+        }
+
+        pinText.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    vibrator.vibrate(VibrationEffect.createOneShot(100, 1));
+                } else
+                {
+                    vibrator.vibrate(100);
+                }
+                if(isEven(clickCount))
+                {
+                    pinImage.setImageResource(R.drawable.ic_red_push_pin);
+                    pinText.setText("Unpin");
+                    isPinned = true;
+                }else
+                {
+                    pinImage.setImageResource(R.drawable.ic_baseline_push_pin_24);
+                    pinText.setText("Pin");
+                    isPinned = false;
+                }
+
+                clickCount ++;
+            }
+        });
+
+
+        makeCopy.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                updateNote(note);
+                Toast.makeText(requireActivity()," Copy Created",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+
+
+
+
+
+
+
 
 
         blueCircle.setOnClickListener(new View.OnClickListener()
@@ -831,10 +978,101 @@ public class UpdateNoteFragment extends Fragment
 
 
 
+        addImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                dialog.dismiss();
+                if(EasyPermissions.hasPermissions(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE))
+                {
+                    selectImage();
+                }else
+                {
+                    EasyPermissions.requestPermissions(requireActivity(),"In case you want to add image need to grant permission",REQUEST_CODE_STORAGE_PERMISSION,
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        dialog.setContentView(view);
+                }
+            }
+        });
 
 
+
+
+
+
+    }
+
+
+
+    private void selectImage()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        if(intent.resolveActivity(getActivity().getPackageManager())!= null)
+        {
+            startActivityForResult(intent,REQUEST_CODE_SELECT_IMAGE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(data != null)
+        {
+            Uri selectedImageUri = data.getData();
+
+            try
+            {
+                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                binding.noteImage.setImageBitmap(bitmap);
+                binding.noteImage.setVisibility(View.VISIBLE);
+
+            }catch (Exception exception)
+            {
+
+            }
+
+            selectedImagePath = getImagePathFromUri(selectedImageUri);
+            Log.e("TAG","OnactivityResult:  "+selectedImagePath);
+        }
+
+
+    }
+
+    private String getImagePathFromUri(Uri uri)
+    {
+        String filePath;
+
+        Cursor cursor = requireActivity().getContentResolver().query(uri,null,null,null,null);
+
+        if(cursor == null)
+        {
+            filePath = uri.getPath();
+        }else
+        {
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex("_data");
+            filePath = cursor.getString(index);
+            cursor.close();
+
+        }
+
+        return filePath;
+    }
+
+
+
+
+
+
+
+    private boolean isEven(int number)
+    {
+        return number % 2 == 0;
     }
 
 

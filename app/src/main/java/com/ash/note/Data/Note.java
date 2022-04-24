@@ -41,6 +41,12 @@ public class Note implements Parcelable
     @ColumnInfo(name = "charCount")
     public int charNumber;
 
+    @ColumnInfo(name = "isPinned")
+    public boolean isPinned;
+
+    @ColumnInfo(name = "imagePath")
+    public String imagePath;
+
 
     protected Note(Parcel in) {
         uid = in.readInt();
@@ -50,6 +56,8 @@ public class Note implements Parcelable
         subTitle = in.readString();
         bgColor = in.readString();
         charNumber = in.readInt();
+        isPinned = in.readByte() != 0;
+        imagePath = in.readString();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -63,6 +71,22 @@ public class Note implements Parcelable
             return new Note[size];
         }
     };
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public boolean isPinned() {
+        return isPinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -136,5 +160,7 @@ public class Note implements Parcelable
         parcel.writeString(subTitle);
         parcel.writeString(bgColor);
         parcel.writeInt(charNumber);
+        parcel.writeByte((byte) (isPinned ? 1 : 0));
+        parcel.writeString(imagePath);
     }
 }
