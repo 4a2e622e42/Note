@@ -2,8 +2,8 @@ package com.ash.note.Hilt;
 
 import android.content.Context;
 
-import com.ash.note.Data.NoteDao;
-import com.ash.note.Data.NoteDataBase;
+import com.ash.note.DB.NoteDao;
+import com.ash.note.DB.NoteDataBase;
 
 import javax.inject.Singleton;
 

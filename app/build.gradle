@@ -62,25 +62,49 @@ dependencies {
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
     //----------------------------------------------------------------------------------------------
+    //Dagger Hilt
+    def dagger_version = "2.38.1"
+    implementation "com.google.dagger:hilt-android:$dagger_version"
+    annotationProcessor "com.google.dagger:hilt-compiler:$dagger_version"
 
 
     //----------------------------------------------------------------------------------------------
-    implementation 'com.google.dagger:hilt-android:2.38.1'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.38.1'
+    //Lotti Animation
+    def lotti_version = "5.0.3"
+    implementation "com.airbnb.android:lottie:$lotti_version"
+
+    //----------------------------------------------------------------------------------------------
+    //Easy Permission
+    def easy_version = "3.0.0"
+    implementation "pub.devrel:easypermissions:$easy_version"
+
+    //----------------------------------------------------------------------------------------------
+    //Rounded Image
+    def round_version = "2.3.0"
+    implementation "com.makeramen:roundedimageview:$round_version"
+
+    //----------------------------------------------------------------------------------------------
+    //Persian Date
+    def date_version = "1.4.0"
+
+    implementation "com.github.samanzamani:PersianDate:$date_version"
+
+    //----------------------------------------------------------------------------------------------
 
 
-    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
 
 
 
 
-    implementation 'com.airbnb.android:lottie:5.0.3'
 
-    implementation 'pub.devrel:easypermissions:3.0.0'
 
-    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+
+
+
+
+
 
 
 

@@ -13,6 +13,7 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#0e121b"
 
         >
 
@@ -21,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
+        android:background="#0e121b"
         tools:context=".Fragments.AddFragment">
 
 
@@ -38,51 +40,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
             <ImageView
                 android:id="@+id/backButton"
                 android:layout_width="34dp"
                 android:layout_height="32dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:rotationY="180"
                 android:src="@drawable/ic_back"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#3369ff" />
-
+                app:tint="#FFFFFF" />
 
             <ImageView
                 android:id="@+id/redoBtn"
                 android:layout_width="34dp"
                 android:layout_height="32dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_redo"
                 android:visibility="invisible"
-                app:layout_constraintEnd_toStartOf="@+id/doneBtn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/undoBtn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#FFFFFF" />
 
             <ImageView
                 android:id="@+id/undoBtn"
                 android:layout_width="34dp"
                 android:layout_height="32dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_undo"
                 android:visibility="invisible"
-                app:layout_constraintEnd_toStartOf="@+id/redoBtn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/doneBtn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#FFFFFF" />
 
             <ImageView
                 android:id="@+id/doneBtn"
                 android:layout_width="34dp"
                 android:layout_height="32dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_tick"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
 
-                />
+                android:src="@drawable/ic_tick"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#FFFFFF" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -94,12 +99,13 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
-            android:background="@drawable/edittext_bg"
-            android:fontFamily="@font/manrope_bold"
-            android:hint="Title"
-            android:textColorHint="#6c7589"
+            android:background="#0e121b"
+            android:fontFamily="@font/sahelbold"
+            android:hint="عنوان"
+            android:textColorHint="#D6D6D6"
             android:textSize="30sp"
             android:maxLength="20"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
@@ -112,46 +118,14 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
-            android:textColor="#6c7589"
+            android:fontFamily="@font/sahel_fd"
+            android:textColor="#f5f3f0"
+            android:gravity="right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time">
 
-            <View
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:background="#4878FF"
-
-                />
-
-            <EditText
-                android:id="@+id/subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:maxLength="100"
-                android:background="@drawable/edittext_bg"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="start"
-                android:hint="SubTitle"
-                android:padding="5dp"
-                android:textColor="#202020"
-                android:textColorHint="#6c7589"
-                android:textSize="18sp" />
-
-        </LinearLayout>
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/noteImage"
@@ -166,7 +140,7 @@
             app:layout_constraintBottom_toTopOf="@+id/content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/time" />
 
 
         <EditText
@@ -177,13 +151,13 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="50dp"
-            android:background="@drawable/edittext_bg"
-            android:fontFamily="@font/manrope_regular"
+            android:background="#0e121b"
             android:gravity="start"
-            android:hint="Note..."
+            android:hint="یادداشت..."
             android:minHeight="48dp"
-            android:textColor="#000000"
-            android:textColorHint="#6c7589"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D6D6D6"
+            android:fontFamily="@font/sahel"
             app:layout_constraintBottom_toTopOf="@+id/more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -199,7 +173,7 @@
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="50dp"
             android:src="@drawable/ic_more"
-            app:tint="#4878FF"
+            app:tint="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

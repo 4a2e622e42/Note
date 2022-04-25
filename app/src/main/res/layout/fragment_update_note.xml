@@ -42,47 +42,50 @@
                     android:id="@+id/backButton"
                     android:layout_width="34dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:rotationY="180"
                     android:src="@drawable/ic_back"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="#3369ff" />
-
+                    app:tint="#4878FF"
+                    />
 
                 <ImageView
                     android:id="@+id/redoBtn"
                     android:layout_width="34dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/ic_redo"
                     android:visibility="invisible"
-                    app:layout_constraintEnd_toStartOf="@+id/doneBtn"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toEndOf="@+id/undoBtn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <ImageView
                     android:id="@+id/undoBtn"
                     android:layout_width="34dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/ic_undo"
                     android:visibility="invisible"
-                    app:layout_constraintEnd_toStartOf="@+id/redoBtn"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toEndOf="@+id/doneBtn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <ImageView
                     android:id="@+id/doneBtn"
                     android:layout_width="34dp"
                     android:layout_height="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/ic_tick"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-
                     />
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -95,8 +98,9 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/edittext_bg"
-                android:fontFamily="@font/manrope_bold"
-                android:hint="Title"
+                android:gravity="start"
+                android:fontFamily="@font/sahelbold"
+                android:hint="عنوان"
                 android:textColorHint="#6c7589"
                 android:textSize="30sp"
                 android:maxLength="20"
@@ -113,45 +117,12 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="15dp"
                 android:textColor="#6c7589"
+                android:fontFamily="@font/sahel_fd"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/upDatedTitle" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/upDatedTime">
 
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left"
-                    android:background="#4878FF"
-
-                    />
-
-                <EditText
-                    android:id="@+id/upDatedSubtitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:maxLength="100"
-                    android:background="@drawable/edittext_bg"
-                    android:fontFamily="@font/manrope_regular"
-                    android:gravity="start"
-                    android:hint="SubTitle"
-                    android:padding="5dp"
-                    android:textColor="#202020"
-                    android:textColorHint="#6c7589"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/noteImage"
@@ -166,7 +137,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/upDatedContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+                app:layout_constraintTop_toBottomOf="@+id/upDatedTime" />
 
 
             <EditText
@@ -178,12 +149,12 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="50dp"
                 android:background="@drawable/edittext_bg"
-                android:fontFamily="@font/manrope_regular"
                 android:gravity="start"
-                android:hint="Note..."
+                android:hint="یادداشت..."
                 android:minHeight="48dp"
                 android:textColor="#000000"
                 android:textColorHint="#6c7589"
+                android:fontFamily="@font/sahel"
                 app:layout_constraintBottom_toTopOf="@+id/more"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"

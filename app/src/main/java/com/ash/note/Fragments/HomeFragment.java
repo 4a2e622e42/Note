@@ -11,27 +11,22 @@ import androidx.navigation.Navigation;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ash.note.AppViewModel;
-import com.ash.note.Data.Note;
-import com.ash.note.NoteAdapter;
-import com.ash.note.PinedAdapter;
+import com.ash.note.ViewModel.AppViewModel;
+import com.ash.note.Model.Note;
+import com.ash.note.Adapter.NoteAdapter;
+import com.ash.note.Adapter.PinedAdapter;
 import com.ash.note.R;
 import com.ash.note.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class HomeFragment extends Fragment

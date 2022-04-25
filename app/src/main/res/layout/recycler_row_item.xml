@@ -19,7 +19,7 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/linearLayout"
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#171c26"
@@ -47,21 +47,24 @@
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Title"
+                    android:layout_height="50dp"
+                    android:text="عنوان"
+                    android:layout_gravity="right"
                     android:textColor="@color/white"
                     android:textSize="22sp"
-                    android:fontFamily="@font/manrope_regular"
+                    android:fontFamily="@font/titr"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     />
+
                 <TextView
                     android:id="@+id/content"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:text="Note"
-                    android:textColor="#818a9c"
+                    android:textColor="#FFFFFF"
                     android:textSize="15sp"
-                    android:fontFamily="@font/manrope_regular"
+                    android:layout_gravity="right"
+                    android:fontFamily="@font/sahel"
                     android:layout_marginTop="8dp"
                     android:textAppearance="?attr/textAppearanceBody2"
                     />
@@ -69,10 +72,10 @@
                     android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12/5/2022 15:35"
-                    android:textColor="#818a9c"
+                    android:textColor="#FFFFFF"
                     android:textSize="12sp"
-                    android:fontFamily="@font/manrope_regular"
+                    android:layout_gravity="right"
+                    android:fontFamily="@font/sahel_fd"
                     android:layout_marginTop="16dp"
                     android:textAppearance="?attr/textAppearanceBody2"
                     />

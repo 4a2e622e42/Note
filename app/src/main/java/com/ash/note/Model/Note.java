@@ -1,4 +1,4 @@
-package com.ash.note.Data;
+package com.ash.note.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.io.Serializable;
-import java.util.List;
 
 @Entity(tableName = "noteTable")
 public class Note implements Parcelable
@@ -32,8 +29,6 @@ public class Note implements Parcelable
     @ColumnInfo(name = "date")
     public String date;
 
-    @ColumnInfo(name = "subTitle")
-    public String subTitle;
 
     @ColumnInfo(name = "bgColor")
     public String bgColor;
@@ -53,7 +48,6 @@ public class Note implements Parcelable
         title = in.readString();
         content = in.readString();
         date = in.readString();
-        subTitle = in.readString();
         bgColor = in.readString();
         charNumber = in.readInt();
         isPinned = in.readByte() != 0;
@@ -100,13 +94,8 @@ public class Note implements Parcelable
         this.date = date;
     }
 
-    public String getSubTitle() {
-        return subTitle;
-    }
 
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
+
 
     public String getBgColor() {
         return bgColor;
@@ -157,7 +146,6 @@ public class Note implements Parcelable
         parcel.writeString(title);
         parcel.writeString(content);
         parcel.writeString(date);
-        parcel.writeString(subTitle);
         parcel.writeString(bgColor);
         parcel.writeInt(charNumber);
         parcel.writeByte((byte) (isPinned ? 1 : 0));

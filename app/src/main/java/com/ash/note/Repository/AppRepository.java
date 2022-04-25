@@ -1,12 +1,12 @@
-package com.ash.note;
+package com.ash.note.Repository;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.ash.note.Data.Note;
-import com.ash.note.Data.NoteDao;
-import com.ash.note.Data.NoteDataBase;
+import com.ash.note.Model.Note;
+import com.ash.note.DB.NoteDao;
+import com.ash.note.DB.NoteDataBase;
 
 import java.util.List;
 

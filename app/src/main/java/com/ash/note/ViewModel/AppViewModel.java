@@ -1,4 +1,4 @@
-package com.ash.note;
+package com.ash.note.ViewModel;
 
 import android.app.Application;
 
@@ -6,19 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.ash.note.Data.Note;
-import com.ash.note.Data.NoteDao;
-import com.ash.note.Data.NoteDataBase;
+import com.ash.note.Model.Note;
+import com.ash.note.Repository.AppRepository;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AppViewModel extends AndroidViewModel
 {

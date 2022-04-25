@@ -20,12 +20,14 @@
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"
             android:src="@drawable/ic_add"
             app:backgroundTint="#4077FF"
-            app:tint="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guideline3"
-            app:layout_constraintEnd_toEndOf="@id/guideline4"
+            app:layout_constraintStart_toStartOf="@id/guideline4"
             app:maxImageSize="30dp"
+            app:tint="@color/white"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,13 +42,15 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/filettobold"
-                android:padding="20dp"
-                android:text="Notes"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/titr"
+                android:gravity="right"
+                android:padding="10dp"
+                android:text="یادداشت ها"
                 android:textColor="@color/white"
                 android:textSize="28sp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -58,8 +62,9 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
                 android:background="@drawable/serach_bg"
-                android:hint="Search your notes"
+                android:hint="جستجو کنید"
                 android:padding="15dp"
+                android:fontFamily="@font/b_nazanin"
                 android:textColorHint="#818a9c"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,13 +91,13 @@
                 android:id="@+id/pinTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="@font/manrope_bold"
-                android:text="Pinned"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/titr"
+                android:text="سنجاق ها"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:padding="20dp"
+                android:gravity="right"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -104,6 +109,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:orientation="horizontal"
+                android:layoutDirection="rtl"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -126,6 +132,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
+                android:layoutDirection="rtl"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,7 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.95" />
+            app:layout_constraintGuide_percent="0.04" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -165,160 +172,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-   <!-- <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#0e121b"
-        >
-
-
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#0e121b"
-        tools:context=".Fragments.HomeFragment">
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="60dp"
-            android:layout_marginBottom="26dp"
-            android:backgroundTint="#3369ff"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_add"
-            app:tint="@color/white" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/filettobold"
-            android:padding="20dp"
-            android:text="Notes"
-            android:textColor="@color/white"
-            android:textSize="28sp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/searchBox"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/serach_bg"
-            android:hint="Search your notes"
-            android:padding="15dp"
-            android:textColorHint="#818a9c"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pinedCon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchBox">
-
-            <TextView
-                android:id="@+id/pinTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="@font/manrope_bold"
-                android:text="Pinned"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                app:layout_constraintBottom_toTopOf="@+id/pinedRecycler"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/pinedRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pinTxt" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinedCon">
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/arrowAnimation"
-            android:layout_width="230dp"
-            android:layout_height="150dp"
-            android:visibility="invisible"
-            app:lottie_autoPlay="true"
-            app:lottie_rawRes="@raw/arrow"
-            tools:layout_editor_absoluteY="494dp" />
-
-
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
--->
 
 
 </layout>

@@ -4,12 +4,11 @@ package com.ash.note.Fragments;
 
 
 
-import static android.app.Activity.RESULT_OK;
-
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,10 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -42,20 +38,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ash.note.AppViewModel;
-import com.ash.note.Data.Note;
+import com.ash.note.ViewModel.AppViewModel;
+import com.ash.note.Model.Note;
 import com.ash.note.R;
 import com.ash.note.TextUndoRedo;
 import com.ash.note.databinding.FragmentAddBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import pub.devrel.easypermissions.EasyPermissions;
+import saman.zamani.persiandate.PersianDate;
+import saman.zamani.persiandate.PersianDateFormat;
 
 
 public class AddFragment extends Fragment
@@ -67,7 +61,7 @@ public class AddFragment extends Fragment
     Vibrator vibrator;
 
 
-    String colorPicked = "3";
+    String colorPicked = "7";
 
     private String selectedImagePath;
 
@@ -93,12 +87,15 @@ public class AddFragment extends Fragment
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
 
+        PersianDate persianDate = new PersianDate();
+
+        PersianDateFormat persianDateFormat = new PersianDateFormat("l ،  H:i", PersianDateFormat.PersianDateNumberCharacter.FARSI);
+        persianDateFormat.format(persianDate);
+
+        String time =  persianDateFormat.format(persianDate);
 
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, HH:mm");
-        String time = simpleDateFormat.format(new Date());
-
-        binding.time.setText(time+" | "+totalCharNumber+" Character");
+        binding.time.setText(time+" | "+totalCharNumber+" حرف");
 
 
        vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
@@ -148,38 +145,12 @@ public class AddFragment extends Fragment
             public void afterTextChanged(Editable editable)
             {
                 totalCharNumber = titleCharNumber + contentCharNumber + subTitleCharNumber;
-                binding.time.setText(time+" | "+totalCharNumber+" Character");
+                binding.time.setText(time+" | "+totalCharNumber+" حرف");
 
             }
         });
 
 
-        binding.subtitle.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-                subTitleCharNumber = i + i2;
-                binding.undoBtn.setVisibility(View.INVISIBLE);
-                binding.redoBtn.setVisibility(View.INVISIBLE);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable)
-            {
-
-                totalCharNumber = titleCharNumber + contentCharNumber + subTitleCharNumber;
-                binding.time.setText(time+" | "+totalCharNumber+" Character");
-            }
-        });
 
 
 
@@ -202,7 +173,7 @@ public class AddFragment extends Fragment
             public void afterTextChanged(Editable editable)
             {
                 totalCharNumber = titleCharNumber + contentCharNumber + subTitleCharNumber;
-                binding.time.setText(time+" | "+totalCharNumber+" Character");
+                binding.time.setText(time+" | "+totalCharNumber+" حرف");
 
 
 
@@ -283,56 +254,86 @@ public class AddFragment extends Fragment
     private void insertData()
     {
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss", Locale.getDefault());
-        String noteTime = simpleDateFormat.format(new Date());
+        PersianDate persianDate = new PersianDate();
+
+        PersianDateFormat persianDateFormat = new PersianDateFormat("Y/m/d  H:i:s");
+
+        String date =  persianDateFormat.format(persianDate);
+
 
         Note note = new Note();
         note.setTitle(binding.title.getText().toString());
-        note.setSubTitle(binding.subtitle.getText().toString());
         note.setContent(binding.content.getText().toString());
-        note.setDate(noteTime);
+        note.setDate(date);
         note.setBgColor(colorPicked);
         note.setCharNumber(totalCharNumber);
         note.setPinned(isPinned);
         note.setImagePath(selectedImagePath);
 
+        if(!binding.title.getText().toString().isEmpty()  || !binding.content.getText().toString().isEmpty())
+        {
+            appViewModel.addNotes(note);
 
-        appViewModel.addNotes(note);
-
-
-
+        }else
+        {
+            Toast.makeText(requireActivity(),"یادداشت شما خالی بود",Toast.LENGTH_LONG).show();
+        }
 
 
     }
     private void setUpDialog()
     {
-        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_dialog,null);
+        View v = getLayoutInflater().inflate(R.layout.bottom_sheet_dialog,null);
 
-        dialog.setContentView(view);
-        TextView pined,addImage,deleteText,makeCopy;
+        dialog.setContentView(v);
+        TextView pined,addImage,deleteText,makeCopy,shareTxt;
 
         ImageView blueCircle,yellowCircle,whiteCircle,purpleCircle,greenCircle,orangeCircle,blackCircle,pinImage;
-        blueCircle = view.findViewById(R.id.blueCircle);
-        yellowCircle = view.findViewById(R.id.yellowCircle);
-        whiteCircle = view.findViewById(R.id.whiteCircle);
-        purpleCircle = view.findViewById(R.id.purpleCircle);
-        greenCircle = view.findViewById(R.id.greenCircle);
-        orangeCircle = view.findViewById(R.id.orangeCircle);
-        blackCircle = view.findViewById(R.id.blackCircle);
+        blueCircle = v.findViewById(R.id.blueCircle);
+        yellowCircle = v.findViewById(R.id.yellowCircle);
+        whiteCircle = v.findViewById(R.id.whiteCircle);
+        purpleCircle = v.findViewById(R.id.purpleCircle);
+        greenCircle = v.findViewById(R.id.greenCircle);
+        orangeCircle = v.findViewById(R.id.orangeCircle);
+        blackCircle = v.findViewById(R.id.blackCircle);
 
-
-        pined    =   view.findViewById(R.id.pinText);
-        pinImage = view.findViewById(R.id.pinImage);
-        addImage = view.findViewById(R.id.addImageText);
-        deleteText = view.findViewById(R.id.deleteText);
-        makeCopy = view.findViewById(R.id.makeCopyText);
+        pined    =   v.findViewById(R.id.pinText);
+        pinImage = v.findViewById(R.id.pinImage);
+        addImage = v.findViewById(R.id.addImageText);
+        deleteText = v.findViewById(R.id.deleteText);
+        makeCopy = v.findViewById(R.id.makeCopyText);
+        shareTxt = v.findViewById(R.id.shareText);
 
         deleteText.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Toast.makeText(requireActivity()," You Can't Delete What's Already Doesn't exist",Toast.LENGTH_LONG).show();
+                Toast.makeText(requireActivity(),"چیزی که وجود نداره رو نمیتونی حذف کنی",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        shareTxt.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(!binding.title.getText().toString().isEmpty()  || !binding.content.getText().toString().isEmpty() )
+                {
+                    String shareContent = binding.title.getText().toString()+"\n"+binding.content.getText().toString();
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT,shareContent);
+                    intent.setType("text/plain");
+
+                    Intent shareIntent = Intent.createChooser(intent,"ارسال با");
+                    startActivity(shareIntent);
+
+                }else
+                {
+                    Toast.makeText(requireActivity(),"یادداشت شما خالی است",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -341,8 +342,10 @@ public class AddFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                insertData();
-                Toast.makeText(requireActivity()," Copy Created",Toast.LENGTH_SHORT).show();
+                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("label",binding.title.getText().toString() +"\n"+ binding.content.getText().toString());
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(requireActivity()," کپی  شد",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -366,12 +369,12 @@ public class AddFragment extends Fragment
                 if(isEven(clickCount))
                 {
                     pinImage.setImageResource(R.drawable.ic_red_push_pin);
-                    pined.setText("Unpin");
+                    pined.setText("سنجاق نشه");
                     isPinned = true;
                 }else
                 {
                     pinImage.setImageResource(R.drawable.ic_baseline_push_pin_24);
-                    pined.setText("Pin");
+                    pined.setText("سنجاق بشه");
                     isPinned = false;
                 }
 
@@ -396,17 +399,14 @@ public class AddFragment extends Fragment
 
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.title.setBackgroundColor(Color.parseColor("#3369ff"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.content.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#3369ff"));
 
                 binding.title.setHintTextColor(Color.WHITE);
-                binding.subtitle.setHintTextColor(Color.WHITE);
                 binding.content.setHintTextColor(Color.WHITE);
 
                 binding.title.setTextColor(Color.WHITE);
                 binding.time.setTextColor(Color.WHITE);
-                binding.subtitle.setTextColor(Color.WHITE);
                 binding.content.setTextColor(Color.WHITE);
 
 
@@ -436,18 +436,15 @@ public class AddFragment extends Fragment
 
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.title.setBackgroundColor(Color.parseColor("#ffda47"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.content.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ffda47"));
 
 
                 binding.title.setHintTextColor(Color.parseColor("#101920"));
-                binding.subtitle.setHintTextColor(Color.parseColor("#101920"));
                 binding.content.setHintTextColor(Color.parseColor("#101920"));
 
                 binding.title.setTextColor(Color.parseColor("#101920"));
                 binding.time.setTextColor(Color.parseColor("#101920"));
-                binding.subtitle.setTextColor(Color.parseColor("#101920"));
                 binding.content.setTextColor(Color.parseColor("#101920"));
 
 
@@ -480,17 +477,14 @@ public class AddFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 binding.title.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 binding.content.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 binding.title.setHintTextColor(Color.parseColor("#6c7589"));
-                binding.subtitle.setHintTextColor(Color.parseColor("#6c7589"));
                 binding.content.setHintTextColor(Color.parseColor("#6c7589"));
 
                 binding.title.setTextColor(Color.parseColor("#202020"));
                 binding.time.setTextColor(Color.parseColor("#202020"));
-                binding.subtitle.setTextColor(Color.parseColor("#202020"));
                 binding.content.setTextColor(Color.parseColor("#202020"));
 
 
@@ -526,17 +520,14 @@ public class AddFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ae3b76"));
 
                 binding.title.setBackgroundColor(Color.parseColor("#ae3b76"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#ae3b76"));
                 binding.content.setBackgroundColor(Color.parseColor("#ae3b76"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ae3b76"));
 
                 binding.title.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.content.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.title.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.time.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.content.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -572,17 +563,14 @@ public class AddFragment extends Fragment
 
 
                 binding.title.setBackgroundColor(Color.parseColor("#0aebaf"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#0aebaf"));
                 binding.content.setBackgroundColor(Color.parseColor("#0aebaf"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#0aebaf"));
 
                 binding.title.setHintTextColor(Color.parseColor("#202020"));
-                binding.subtitle.setHintTextColor(Color.parseColor("#202020"));
                 binding.content.setHintTextColor(Color.parseColor("#202020"));
 
                 binding.title.setTextColor(Color.parseColor("#202020"));
                 binding.time.setTextColor(Color.parseColor("#202020"));
-                binding.subtitle.setTextColor(Color.parseColor("#202020"));
                 binding.content.setTextColor(Color.parseColor("#202020"));
 
 
@@ -618,17 +606,14 @@ public class AddFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ff7746"));
 
                 binding.title.setBackgroundColor(Color.parseColor("#ff7746"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#ff7746"));
                 binding.content.setBackgroundColor(Color.parseColor("#ff7746"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ff7746"));
 
                 binding.title.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.content.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.title.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.time.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.content.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -661,17 +646,14 @@ public class AddFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#0e121b"));
 
                 binding.title.setBackgroundColor(Color.parseColor("#0e121b"));
-                binding.subtitle.setBackgroundColor(Color.parseColor("#0e121b"));
                 binding.content.setBackgroundColor(Color.parseColor("#0e121b"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#0e121b"));
 
                 binding.title.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.content.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.title.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.time.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.subtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.content.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -703,12 +685,15 @@ public class AddFragment extends Fragment
                   selectImage();
               }else
               {
-                  EasyPermissions.requestPermissions(requireActivity(),"In case you want to add image need to grant permission",REQUEST_CODE_STORAGE_PERMISSION,
+                  EasyPermissions.requestPermissions(requireActivity(),"اگر قضد اسافه کردن عکس دارید باید اجازه دسترسی را به برنامه بدهید",REQUEST_CODE_STORAGE_PERMISSION,
                           Manifest.permission.READ_EXTERNAL_STORAGE);
 
               }
             }
         });
+
+
+
 
 
 

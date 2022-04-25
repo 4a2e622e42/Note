@@ -1,15 +1,12 @@
-package com.ash.note;
+package com.ash.note.Adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.Filter;
 import android.widget.Filterable;
 
@@ -18,14 +15,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ash.note.Data.Note;
+import com.ash.note.Model.Note;
+import com.ash.note.R;
 import com.ash.note.databinding.RecyclerRowItemBinding;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> implements Filterable
 {
@@ -52,7 +48,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         {
             layoutInflater = LayoutInflater.from(parent.getContext());
         }
-        RecyclerRowItemBinding binding = DataBindingUtil.inflate(layoutInflater,R.layout.recycler_row_item,parent,false);
+        RecyclerRowItemBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.recycler_row_item,parent,false);
         return new NoteViewHolder(binding);
     }
 
@@ -64,20 +60,65 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         holder.bind(noteList.get(position));
 
 
+        switch (noteList.get(position).getBgColor())
+        {
+            case "1":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#3369ff"));
+                holder.binding.title.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.content.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.date.setTextColor(Color.parseColor("#FFFFFF"));
+                break;
+
+            case "2":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#ffda47"));
+                holder.binding.title.setTextColor(Color.parseColor("#101920"));
+                holder.binding.content.setTextColor(Color.parseColor("#101920"));
+                holder.binding.date.setTextColor(Color.parseColor("#101920"));
+                break;
+
+            case "3":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+                holder.binding.title.setTextColor(Color.parseColor("#202020"));
+                holder.binding.content.setTextColor(Color.parseColor("#202020"));
+                holder.binding.date.setTextColor(Color.parseColor("#202020"));
+                break;
+
+            case "4":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#ae3b76"));
+                holder.binding.title.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.content.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.date.setTextColor(Color.parseColor("#FFFFFF"));
+                break;
+
+            case "5":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#0aebaf"));
+                holder.binding.title.setTextColor(Color.parseColor("#202020"));
+                holder.binding.content.setTextColor(Color.parseColor("#202020"));
+                holder.binding.date.setTextColor(Color.parseColor("#202020"));
+                break;
+
+            case "6":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#ff7746"));
+                holder.binding.title.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.content.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.date.setTextColor(Color.parseColor("#FFFFFF"));
+                break;
+
+            case "7":
+                holder.binding.cardView.setCardBackgroundColor(Color.parseColor("#171c26"));
+                holder.binding.title.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.content.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.binding.date.setTextColor(Color.parseColor("#FFFFFF"));
+                break;
 
 
-        //Change CardView Color Randomly
-        ArrayList<String> colorList = new ArrayList<>();
-        colorList.add("#ffda47");
-        colorList.add("#ae3b76");
-        colorList.add("#0aebaf");
-        colorList.add("#171c26");
-        colorList.add("#3369ff");
-
-        //holder.binding.linearLayout.setBackgroundColor(Color.parseColor(colorList.get(new Random().nextInt(colorList.size()))));
 
 
-        holder.binding.linearLayout.setOnClickListener(new View.OnClickListener()
+
+        }
+
+
+        holder.binding.cardView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -126,7 +167,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             {
                 for(Note items: filteredNote)
                 {
-                    if(items.getTitle().toLowerCase().contains(charSequence.toString()) || items.getSubTitle().toLowerCase().contains(charSequence.toString()) || items.getContent().toLowerCase().contains(charSequence.toString()))
+                    if(items.getTitle().toLowerCase().contains(charSequence.toString())  || items.getContent().toLowerCase().contains(charSequence.toString()))
                     {
                         filteringNote.add(items);
                     }
@@ -170,6 +211,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         public void bind(Note note)
         {
+
+
             binding.title.setText(note.getTitle());
             binding.content.setText(note.getContent());
             binding.date.setText(note.getDate());

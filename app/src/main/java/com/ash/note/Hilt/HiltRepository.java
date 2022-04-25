@@ -1,12 +1,6 @@
 package com.ash.note.Hilt;
 
-import com.ash.note.AppRepository;
-import com.ash.note.Data.NoteDao;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
-import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 

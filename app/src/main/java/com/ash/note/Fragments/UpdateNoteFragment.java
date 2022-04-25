@@ -1,6 +1,8 @@
 package com.ash.note.Fragments;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,18 +33,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ash.note.AppViewModel;
-import com.ash.note.Data.Note;
+import com.ash.note.ViewModel.AppViewModel;
+import com.ash.note.Model.Note;
 import com.ash.note.R;
 import com.ash.note.TextUndoRedo;
 import com.ash.note.databinding.FragmentUpdateNoteBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import pub.devrel.easypermissions.EasyPermissions;
+import saman.zamani.persiandate.PersianDate;
+import saman.zamani.persiandate.PersianDateFormat;
 
 public class UpdateNoteFragment extends Fragment
 {
@@ -64,6 +66,8 @@ public class UpdateNoteFragment extends Fragment
     int contentCharNumber;
     int totalCharNumber ;
 
+    public Uri selectedImageUri;
+
     String selectedImagePath;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
@@ -83,8 +87,12 @@ public class UpdateNoteFragment extends Fragment
         uid = note.getUid();
 
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, HH:mm");
-        String time = simpleDateFormat.format(new Date());
+        PersianDate persianDate = new PersianDate();
+
+        PersianDateFormat persianDateFormat = new PersianDateFormat("l H:i");
+        persianDateFormat.format(persianDate);
+
+        String time =  persianDateFormat.format(persianDate);
 
 
         //Init Vibrator
@@ -93,12 +101,11 @@ public class UpdateNoteFragment extends Fragment
         totalCharNumber = note.getCharNumber();
 
 
-        binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" Character");
+        binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" حرف");
 
 
 
         binding.upDatedTitle.setText(note.getTitle().toString());
-        binding.upDatedSubtitle.setText(note.getSubTitle().toString());
         binding.upDatedContent.setText(note.getContent().toString());
 
 
@@ -128,8 +135,7 @@ public class UpdateNoteFragment extends Fragment
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
         //Get Image
-        Log.e("TAG","selctedPath:  "+selectedImagePath);
-        Log.e("TAG","GetFromNote:  "+note.getImagePath());
+
 
 
         if(note.getImagePath() != null)
@@ -165,7 +171,6 @@ public class UpdateNoteFragment extends Fragment
                 titleCharNumber = i + i2;
                 binding.undoBtn.setVisibility(View.INVISIBLE);
                 binding.redoBtn.setVisibility(View.INVISIBLE);
-                Log.e("TAG","Title:  "+"i:  "+i+"    i1:   "+i1+"     i2:   "+i2);
 
 
             }
@@ -175,40 +180,12 @@ public class UpdateNoteFragment extends Fragment
             {
 
                 totalCharNumber = titleCharNumber + subTitleCharNumber + contentCharNumber;
-                binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" Character");
+                binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" حرف");
 
 
             }
         });
 
-
-        binding.upDatedSubtitle.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-                subTitleCharNumber = i + i2;
-                binding.undoBtn.setVisibility(View.INVISIBLE);
-                binding.redoBtn.setVisibility(View.INVISIBLE);
-                Log.e("TAG","SubTitle:  "+"i:  "+i+"    i1:   "+i1+"     i2:   "+i2);
-
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable)
-            {
-                totalCharNumber = titleCharNumber + subTitleCharNumber + contentCharNumber;
-                binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" Character");
-
-            }
-        });
 
 
 
@@ -226,7 +203,6 @@ public class UpdateNoteFragment extends Fragment
                 contentCharNumber = i + i2;
                 binding.undoBtn.setVisibility(View.VISIBLE);
                 binding.redoBtn.setVisibility(View.VISIBLE);
-                Log.e("TAG","Content:  "+"i:  "+i+"    i1:   "+i1+"     i2:   "+i2);
 
             }
 
@@ -235,7 +211,7 @@ public class UpdateNoteFragment extends Fragment
             {
 
                 totalCharNumber = titleCharNumber + subTitleCharNumber + contentCharNumber;
-                binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" Character");
+                binding.upDatedTime.setText(time+" | "+(totalCharNumber)+" حرف");
 
             }
         });
@@ -312,7 +288,6 @@ public class UpdateNoteFragment extends Fragment
         Note updateNote   =  note;
         updateNote.uid    =  note.getUid();
         updateNote.setTitle(binding.upDatedTitle.getText().toString());
-        updateNote.setSubTitle(binding.upDatedSubtitle.getText().toString());
         updateNote.setContent(binding.upDatedContent.getText().toString());
         updateNote.setCharNumber(totalCharNumber);
         updateNote.setBgColor(bgColor);
@@ -355,17 +330,14 @@ public class UpdateNoteFragment extends Fragment
 
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#3369ff"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#3369ff"));
 
                 binding.upDatedTitle.setHintTextColor(Color.WHITE);
-                binding.upDatedSubtitle.setHintTextColor(Color.WHITE);
                 binding.upDatedContent.setHintTextColor(Color.WHITE);
 
                 binding.upDatedTitle.setTextColor(Color.WHITE);
                 binding.upDatedTime.setTextColor(Color.WHITE);
-                binding.upDatedSubtitle.setTextColor(Color.WHITE);
                 binding.upDatedContent.setTextColor(Color.WHITE);
 
 
@@ -387,18 +359,15 @@ public class UpdateNoteFragment extends Fragment
 
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#ffda47"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ffda47"));
 
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#101920"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#101920"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#101920"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#101920"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#101920"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#101920"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#101920"));
 
 
@@ -420,17 +389,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#6c7589"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#6c7589"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#6c7589"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#202020"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#202020"));
 
 
@@ -453,17 +419,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ae3b76"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#ae3b76"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#ae3b76"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#ae3b76"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ae3b76"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -488,17 +451,14 @@ public class UpdateNoteFragment extends Fragment
 
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#0aebaf"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#0aebaf"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#0aebaf"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#0aebaf"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#202020"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#202020"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#202020"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#202020"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#202020"));
 
 
@@ -521,17 +481,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ff7746"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#ff7746"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#ff7746"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#ff7746"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ff7746"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -554,17 +511,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#0e121b"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#0e121b"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#0e121b"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#0e121b"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#0e121b"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -586,7 +540,7 @@ public class UpdateNoteFragment extends Fragment
 
         dialog.setContentView(view);
 
-        TextView deleteNote,pinText,addImage,makeCopy;
+        TextView deleteNote,pinText,addImage,shareTxt,makeCopy;
 
         ImageView blueCircle,yellowCircle,whiteCircle,purpleCircle,greenCircle,orangeCircle,blackCircle,pinImage;
         blueCircle = view.findViewById(R.id.blueCircle);
@@ -603,6 +557,7 @@ public class UpdateNoteFragment extends Fragment
         pinImage = view.findViewById(R.id.pinImage);
         addImage = view.findViewById(R.id.addImageText);
         makeCopy = view.findViewById(R.id.makeCopyText);
+        shareTxt = view.findViewById(R.id.shareText);
 
 
 
@@ -620,18 +575,47 @@ public class UpdateNoteFragment extends Fragment
             }
         });
 
+
+        shareTxt.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(!binding.upDatedTitle.getText().toString().isEmpty()  || !binding.upDatedContent.getText().toString().isEmpty())
+                {
+                    String shareContent = binding.upDatedTitle.getText().toString()+"\n"+binding.upDatedContent.getText().toString();
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT,shareContent);
+                    intent.setType("text/plain");
+
+                    Intent shareIntent = Intent.createChooser(intent,"ارسال با");
+                    startActivity(shareIntent);
+
+                }else
+                {
+                    Toast.makeText(requireActivity(),"یادداشت شما خالی بود",Toast.LENGTH_SHORT).show();
+                }
+
+
+
+            }
+        });
+
+
+
         if(pin)
         {
             isPinned = true;
             clickCount = 1;
             pinImage.setImageResource(R.drawable.ic_red_push_pin);
-            pinText.setText("Unpin");
+            pinText.setText("سنجاقه نشه");
         }else
         {
             isPinned = false;
             clickCount = 0;
             pinImage.setImageResource(R.drawable.ic_baseline_push_pin_24);
-            pinText.setText("Pin");
+            pinText.setText("سنجاق بشه");
 
         }
 
@@ -650,12 +634,12 @@ public class UpdateNoteFragment extends Fragment
                 if(isEven(clickCount))
                 {
                     pinImage.setImageResource(R.drawable.ic_red_push_pin);
-                    pinText.setText("Unpin");
+                    pinText.setText("سنجاق نشه");
                     isPinned = true;
                 }else
                 {
                     pinImage.setImageResource(R.drawable.ic_baseline_push_pin_24);
-                    pinText.setText("Pin");
+                    pinText.setText("سنجاق بشه");
                     isPinned = false;
                 }
 
@@ -669,8 +653,10 @@ public class UpdateNoteFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                updateNote(note);
-                Toast.makeText(requireActivity()," Copy Created",Toast.LENGTH_SHORT).show();
+                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("label",binding.upDatedTitle.getText().toString() +"\n"+ binding.upDatedContent.getText().toString());
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(requireActivity()," کپی  شد",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -700,17 +686,14 @@ public class UpdateNoteFragment extends Fragment
 
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#3369ff"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#3369ff"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#3369ff"));
 
                 binding.upDatedTitle.setHintTextColor(Color.WHITE);
-                binding.upDatedSubtitle.setHintTextColor(Color.WHITE);
                 binding.upDatedContent.setHintTextColor(Color.WHITE);
 
                 binding.upDatedTitle.setTextColor(Color.WHITE);
                 binding.upDatedTime.setTextColor(Color.WHITE);
-                binding.upDatedSubtitle.setTextColor(Color.WHITE);
                 binding.upDatedContent.setTextColor(Color.WHITE);
 
 
@@ -741,18 +724,15 @@ public class UpdateNoteFragment extends Fragment
 
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#ffda47"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#ffda47"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ffda47"));
 
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#101920"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#101920"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#101920"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#101920"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#101920"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#101920"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#101920"));
 
 
@@ -785,17 +765,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#6c7589"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#6c7589"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#6c7589"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#202020"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#202020"));
 
 
@@ -826,17 +803,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ae3b76"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#ae3b76"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#ae3b76"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#ae3b76"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ae3b76"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -868,17 +842,14 @@ public class UpdateNoteFragment extends Fragment
 
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#0aebaf"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#0aebaf"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#0aebaf"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#0aebaf"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#202020"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#202020"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#202020"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#202020"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#202020"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#202020"));
 
 
@@ -909,17 +880,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#ff7746"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#ff7746"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#ff7746"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#ff7746"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#ff7746"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -950,17 +918,14 @@ public class UpdateNoteFragment extends Fragment
                 binding.addFragmentCon.setBackgroundColor(Color.parseColor("#0e121b"));
 
                 binding.upDatedTitle.setBackgroundColor(Color.parseColor("#0e121b"));
-                binding.upDatedSubtitle.setBackgroundColor(Color.parseColor("#0e121b"));
                 binding.upDatedContent.setBackgroundColor(Color.parseColor("#0e121b"));
                 binding.nestedScrollView.setBackgroundColor(Color.parseColor("#0e121b"));
 
                 binding.upDatedTitle.setHintTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setHintTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setHintTextColor(Color.parseColor("#FFFFFF"));
 
                 binding.upDatedTitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedTime.setTextColor(Color.parseColor("#FFFFFF"));
-                binding.upDatedSubtitle.setTextColor(Color.parseColor("#FFFFFF"));
                 binding.upDatedContent.setTextColor(Color.parseColor("#FFFFFF"));
 
 
@@ -989,7 +954,7 @@ public class UpdateNoteFragment extends Fragment
                     selectImage();
                 }else
                 {
-                    EasyPermissions.requestPermissions(requireActivity(),"In case you want to add image need to grant permission",REQUEST_CODE_STORAGE_PERMISSION,
+                    EasyPermissions.requestPermissions(requireActivity(),"اگر قضد اسافه کردن عکس دارید باید اجازه دسترسی را به برنامه بدهید",REQUEST_CODE_STORAGE_PERMISSION,
                             Manifest.permission.READ_EXTERNAL_STORAGE);
 
                 }
@@ -1022,7 +987,7 @@ public class UpdateNoteFragment extends Fragment
 
         if(data != null)
         {
-            Uri selectedImageUri = data.getData();
+            selectedImageUri = data.getData();
 
             try
             {
